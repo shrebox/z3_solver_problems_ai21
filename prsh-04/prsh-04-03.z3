@@ -19,23 +19,56 @@
 
 ;; TODO: Implement the statements 1 to 6
 
+; 1 --> forall_x exits_y exists_z ((Orders x y) /\ (Orders x z)  /\ app_y /\ main_z)
+(assert
+    (forall
+        ((x Person))
+        (exists
+            ((y Meal) (z Meal))
+            (and 
+                (Orders x y)
+                (Orders x z)
+                (Appetizer y)
+                (Main z)
+            )
+        )
+    )
+)
 
+; 2 --> forall_x exits_y (Orders y x)
+(assert
+    (forall
+        ((x Meal))
+        (exists
+            ((y Person))
+            (Orders y x)
+        )
+    )
+)
 
+; 3 --> TODO
 
+; 4 --> TODO
 
+; 5 --> forall_x (Orders x salad) => not(Orders x cheese)
+(assert
+    (forall
+        ((x Person))
+        (=>
+            (Orders x salad)
+            (not (Orders x cheese))
+        )
+    )
+)
 
-
-
-
-
-
-
-
-
-
-
-
-
+; 6
+(assert
+    (and
+        (Orders eve cheese)
+        (Orders adam steak)
+        (Orders paula soup)
+    )
+)
 
 ;;;;;;;;;;;; ----END MODEL----
 

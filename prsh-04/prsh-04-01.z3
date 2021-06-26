@@ -67,5 +67,7 @@
 
 ; to show
 (assert (Below E C))
+; (assert (Below A B))
+; (assert (Below B A))
 
 (check-sat)

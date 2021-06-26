@@ -1,3 +1,8 @@
+; Authors: 
+; Aleena Siji (7010829)
+; Shreyash Arya (7015279)
+; Sili Vettiyara Sunil (7009731)
+
 (set-option :produce-models true)
 
 ; new types for persons and meals
@@ -17,9 +22,7 @@
 
 ;;;;;;;;;;;;; ----START MODEL----   
 
-;; TODO: Implement the statements 1 to 6
-
-; 1 --> forall_x exits_y exists_z ((Orders x y) /\ (Orders x z)  /\ app_y /\ main_z)
+; Condition 1:
 (assert
     (forall
         ((x Person))
@@ -46,7 +49,7 @@
     )
 )
 
-; 2 --> forall_x exits_y (Orders y x)
+; Condition 2:
 (assert
     (forall
         ((x Meal))
@@ -57,8 +60,9 @@
     )
 )
 
-; 3 --> TODO
+; Condition 3:
 
+; Below function checks if given meal is ordered from two or more persons
 (declare-fun twoOrMoreOrders (Meal) Bool) 
 (assert
     (forall
@@ -96,13 +100,20 @@
     )
 )
 
+; Below we assert condition 3:
 (assert
     (exists
         ((x Meal) (y Meal))
         (and
             (or
-                (and (Appetizer x) (Main y))
-                (and (Appetizer y) (Main x))
+                (and
+                    (not (Appetizer x))
+                    (Appetizer y)
+                )
+                (and 
+                    (not (Appetizer y))
+                    (Appetizer x)
+                )
             )
             (and 
                 (twoOrMoreOrders x)
@@ -122,7 +133,7 @@
     )
 )
 
-; 4 --> TODO
+; Condition 4:
 (assert
     (exists
         ((x Person))
@@ -146,7 +157,7 @@
     )
 )
 
-; 5 --> forall_x (Orders x salad) => not(Orders x cheese)
+; Condition 5:
 (assert
     (forall
         ((x Person))
@@ -157,7 +168,7 @@
     )
 )
 
-; 6
+; Condition 6:
 (assert
     (and
         (Orders eve cheese)
@@ -166,6 +177,11 @@
     )
 )
 
+; Checking if there are multiple solution by negating the results we got for satisfaction
+
+(assert
+    (= (Orders eve steak) false)
+)
 
 ;;;;;;;;;;;; ----END MODEL----
 

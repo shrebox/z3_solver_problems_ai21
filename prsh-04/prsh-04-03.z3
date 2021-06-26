@@ -15,7 +15,7 @@
 (declare-fun Orders (Person Meal) Bool)
 
 
-;;;;;;;;;;;;; ----START MODEL----
+;;;;;;;;;;;;; ----START MODEL----   
 
 ;; TODO: Implement the statements 1 to 6
 
@@ -25,11 +25,22 @@
         ((x Person))
         (exists
             ((y Meal) (z Meal))
-            (and 
+            (and
+                (distinct y z) 
                 (Orders x y)
                 (Orders x z)
                 (Appetizer y)
                 (Main z)
+                (forall
+                    ((k Meal))
+                    (=>
+                        (and
+                            (distinct y k)
+                            (distinct z k)
+                        )
+                        (not (Orders x k))
+                    )
+                )
             )
         )
     )
@@ -48,7 +59,92 @@
 
 ; 3 --> TODO
 
+(declare-fun twoOrMoreOrders (Meal) Bool) 
+(assert
+    (forall
+        ((x Meal))
+        (and
+            (=>
+                (exists 
+                    ((y Person) (z Person))
+                    (and
+                        (distinct y z)
+                        (Orders y x)
+                        (Orders z x)
+                    )
+                )
+                (=
+                    (twoOrMoreOrders x)
+                    true
+                )
+            )
+            (=>
+                (=
+                    (twoOrMoreOrders x)
+                    true
+                )
+                (exists 
+                    ((y Person) (z Person))
+                    (and
+                        (distinct y z)
+                        (Orders y x)
+                        (Orders z x)
+                    )
+                )
+            )
+        )
+    )
+)
+
+(assert
+    (exists
+        ((x Meal) (y Meal))
+        (and
+            (or
+                (and (Appetizer x) (Main y))
+                (and (Appetizer y) (Main x))
+            )
+            (and 
+                (twoOrMoreOrders x)
+                (twoOrMoreOrders y)
+                (forall
+                    ((k Meal))
+                    (=>
+                        (and
+                            (distinct x k)
+                            (distinct y k)
+                        )
+                        (not (twoOrMoreOrders k))
+                    )
+                )
+            )
+        )
+    )
+)
+
 ; 4 --> TODO
+(assert
+    (exists
+        ((x Person))
+        (or
+            (and
+                (Orders x salad)
+                (Orders x cheese)
+                (not (Orders x soup))
+            )
+            (and
+                (Orders x salad)
+                (Orders x soup)
+                (not (Orders x cheese))
+            )
+            (and
+                (Orders x soup)
+                (Orders x cheese)
+                (not (Orders x salad))
+            )
+        )
+    )
+)
 
 ; 5 --> forall_x (Orders x salad) => not(Orders x cheese)
 (assert
@@ -69,6 +165,7 @@
         (Orders paula soup)
     )
 )
+
 
 ;;;;;;;;;;;; ----END MODEL----
 
